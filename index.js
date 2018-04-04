@@ -3,7 +3,10 @@
  */
 
 'use strict';
+const Alexa = require('alexa-sdk');
+const patient = require('./app/PatientModule.js');
 
+console.log('======================', patient);
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
 exports.handler = function (event, context) {
@@ -63,8 +66,8 @@ function welcomeNote(launchRequest, session, callback) {
     console.log("onLaunch requestId=" + launchRequest.requestId
         + ", sessionId=" + session.sessionId);
 
-    var cardTitle = "Hello, World!"
-    var speechOutput = "You can tell Hello, World! to say Hello, World!"
+    var cardTitle = "Ideamed"
+    var speechOutput = "Hi, This is ideamed I can create and list appoinments for you."
     callback(session.attributes,
         buildSpeechletResponse(cardTitle, speechOutput, "", true));
 }
@@ -77,7 +80,7 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
     switch(intentName) {
         case "ListOfPatient":
-            getListOfPatinet(intent, function(speechOutput, repromptText, sessionEnd) {
+            getListOfPatient(intent, function(speechOutput, repromptText, sessionEnd) {
                 callback(session.attributes,
                     buildSpeechletResponseWithoutCard(speechOutput, repromptText,  sessionEnd));
             });
@@ -149,4 +152,18 @@ function buildResponse(sessionAttributes, speechletResponse) {
         sessionAttributes: sessionAttributes,
         response: speechletResponse
     };
+}
+
+
+var getListOfPatient = function(intent, callback) {
+    var patientType = intent.slots.patientType,
+        date = intent.slots.date;
+    if(patientType && date) {
+        getPatientCountByTypeAndDate(patientType, date, callback);
+    }
+}
+
+var getPatientCountByTypeAndDate = function(patientType, date, callback) {
+    var speechOut = "34 " + patientType.value + " have registred " + date.value;
+    callback(speechOut, "", true);
 }

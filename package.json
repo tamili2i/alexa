@@ -1,0 +1,23 @@
+{
+  "name": "ideamed",
+  "version": "1.0.0",
+  "description": "ideamed alexa skill kit",
+  "main": "index.js",
+  "dependencies": {
+    "alexa-sdk": "^1.0.25"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamili2i/alexa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamili2i/alexa/issues"
+  },
+  "homepage": "https://github.com/tamili2i/alexa#readme"
+}
