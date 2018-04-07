@@ -4,12 +4,41 @@
 
 'use strict';
 const Alexa = require('alexa-sdk');
-const patient = require('./app/PatientModule.js');
+const Patient = require('./app/PatientModule.js');
+const Appointment = require('./app/Appointment.js');
 
-console.log('======================', patient);
+//console.log('======================', patient);
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
-exports.handler = function (event, context) {
+const handlers = {
+    /*"LaunchRequest": 
+        welcomeNote(event.request, event.session,function(sessionAttributes, speechletResponse) {
+                    context.succeed(buildResponse(sessionAttributes, speechletResponse));
+                }),*/
+    'BookAppointment': function () {
+        var self = this;
+        Appointment.createAppointment(self);
+    }, 
+    'LaunchRequest': function() {
+        var self = this;
+        welcomeNote(this);
+    }
+    //"SessionEndedRequest":  sessionEnd()
+};
+
+exports.handler = function(event, context, callback) {
+    const alexa = Alexa.handler(event, context, callback);
+    alexa.appId = process.env.APP_ID; // APP_ID is your skill id which can be found in the Amazon developer console where you create the skill.
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+};
+
+
+/*function sessionEnd() {
+    onSessionEnded(event.request, event.session);
+                context.succeed();
+}*/
+/*exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
 
@@ -22,7 +51,7 @@ exports.handler = function (event, context) {
 //         context.fail("Invalid Application ID");
 //      }
 
-        if (event.session.new) {
+       /* if (event.session.new) {
             onSessionStarted({requestId: event.request.requestId}, event.session);
         }
 
@@ -47,54 +76,60 @@ exports.handler = function (event, context) {
     } catch (e) {
         context.fail("Exception: " + e);
     }
-};
+};*/
 
 /**
  * Called when the session starts.
  */
-function onSessionStarted(sessionStartedRequest, session) {
+/*function onSessionStarted(sessionStartedRequest, session) {
     console.log("onSessionStarted requestId=" + sessionStartedRequest.requestId
         + ", sessionId=" + session.sessionId);
 
     // add any session init logic here
-}
+}*/
 
 /**
  * Called when the user invokes the skill without specifying what they want.
  */
-function welcomeNote(launchRequest, session, callback) {
+function welcomeNote(self) {
     console.log("onLaunch requestId=" + launchRequest.requestId
         + ", sessionId=" + session.sessionId);
 
     var cardTitle = "Ideamed"
     var speechOutput = "Hi, This is ideamed I can create and list appoinments for you."
-    callback(session.attributes,
-        buildSpeechletResponse(cardTitle, speechOutput, "", true));
+    //callback(session.attributes,
+      //  buildSpeechletResponse(cardTitle, speechOutput, "", true));
+    self.emit(":tell", speechOutput);
 }
 
 /**
  * Called when the user specifies an intent for this skill.
  */
-function onIntent(intentRequest, session, callback) {
+/*function onIntent(intentRequest, session, callback) {
     var intent = intentRequest.intent,
         intentName = intentRequest.intent.name;
     switch(intentName) {
         case "ListOfPatient":
-            getListOfPatient(intent, function(speechOutput, repromptText, sessionEnd) {
+            Patient.getListOfPatient(intent, function(speechOutput, repromptText, sessionEnd) {
                 callback(session.attributes,
                     buildSpeechletResponseWithoutCard(speechOutput, repromptText,  sessionEnd));
             });
             break;
+        case "BookAppointment";
+            Appointment.createAppointment(intent, function(speechOutput, repromptText, sessionEnd) {
+                callback(session.attributes,
+                    buildSpeechletResponseWithoutCard(speechOutput, repromptText,  sessionEnd));
+            });
         default: 
             break;
     }
-}
+}*/
 
 /**
  * Called when the user ends the session.
  * Is not called when the skill returns shouldEndSession=true.
  */
-function onSessionEnded(sessionEndedRequest, session) {
+/*function onSessionEnded(sessionEndedRequest, session) {
     console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId
         + ", sessionId=" + session.sessionId);
 
@@ -105,11 +140,11 @@ function handleTestRequest(intent, session, callback) {
     console.log(intent);
     callback(session.attributes,
         buildSpeechletResponseWithoutCard("Hello, World!", "eerererer", "true"));
-}
+}*/
 
 // ------- Helper functions to build responses -------
 
-function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
+/*function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     return {
         outputSpeech: {
             type: "PlainText",
@@ -152,18 +187,4 @@ function buildResponse(sessionAttributes, speechletResponse) {
         sessionAttributes: sessionAttributes,
         response: speechletResponse
     };
-}
-
-
-var getListOfPatient = function(intent, callback) {
-    var patientType = intent.slots.patientType,
-        date = intent.slots.date;
-    if(patientType && date) {
-        getPatientCountByTypeAndDate(patientType, date, callback);
-    }
-}
-
-var getPatientCountByTypeAndDate = function(patientType, date, callback) {
-    var speechOut = "34 " + patientType.value + " have registred " + date.value;
-    callback(speechOut, "", true);
-}
+}*/
