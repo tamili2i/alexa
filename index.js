@@ -22,6 +22,10 @@ const handlers = {
     'LaunchRequest': function() {
         var self = this;
         welcomeNote(this);
+    },
+    'GetAppointmentList': function() {
+        var self = this;
+        Appointment.getAppointments(self);
     }
     //"SessionEndedRequest":  sessionEnd()
 };
