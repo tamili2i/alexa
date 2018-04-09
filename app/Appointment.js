@@ -48,7 +48,14 @@ var _getAppointments = function(self) {
 	var param = {};
 	param.name = ENV.name;
 	param.fromTime = Moment().format(DATE_TIME_DB);
-	HTTP.post("services/api/query/GET_FUTURE_APPOINTMENT", param, function(response, body) {
+    var url = "services/api/query/GET_FUTURE_APPOINTMENT"
+	if(slots.appointmentDate.value) {
+		param.fromTime = Moment().format(DATE_FORMAT) + " 00:00:00";
+		param.toTime = Moment().format(DATE_FORMAT) + " 23:59:59";
+		url = "services/api/query/GET_APPOINTMENT_BY_DATE";
+	}
+
+	HTTP.post(url, param, function(response, body) {
 		self.emit(':tell', "Appointment has been scheduled on " + Moment(body.fromTime).format(DATE_USER) + " between " + Moment(body.fromTime).format(TIME_12HR) + " and " + Moment(body.toTime).format(TIME_12HR));
 	}, function(error) {
 				
