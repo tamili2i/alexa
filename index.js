@@ -100,7 +100,7 @@ function welcomeNote(self) {
         + ", sessionId=" + session.sessionId);
 
     var cardTitle = "Ideamed"
-    var speechOutput = "Hi, This is ideamed I can create and list appoinments for you."
+    var speechOutput = "Hi, i am ideamed I can create and list appoinments for you."
     //callback(session.attributes,
       //  buildSpeechletResponse(cardTitle, speechOutput, "", true));
     self.emit(":tell", speechOutput);
